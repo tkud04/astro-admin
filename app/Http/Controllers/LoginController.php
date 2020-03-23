@@ -137,7 +137,7 @@ class LoginController extends Controller {
          else
          {
 			 #dd($req);
-            $req['role'] = "admin";    
+            $req['role'] = "user";    
             $req['status'] = "enabled";           
             $req['verified'] = "user";  			
             

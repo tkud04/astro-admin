@@ -304,6 +304,23 @@ $subject = $data['subject'];
                 return $ret;
            }
 		   
+		   
+		   function getDrivers()
+           {
+           	$ret = [];
+              $drivers = User::where('role',"driver")->get();
+ 
+              if($drivers != null)
+               {
+				  foreach($drivers as $d)
+				  {
+					  $dd = $this->getUser($d->id);
+					  array_push($ret,$dd);
+				  }
+               }                         
+                                                      
+                return $ret;
+           }
 		  	   
 		   
 		

@@ -49,7 +49,7 @@ class MainController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getAccounts(Request $request)
+	public function getDrivers(Request $request)
     {
        $user = null;
        $req = $request->all();
@@ -64,18 +64,12 @@ class MainController extends Controller {
 			return redirect()->intended('login');
 		}
 		
-		$xf = isset($req['xf']) ? $req['xf'] : $user->email;
-		$accounts = $this->helpers->getUsers();
-		$account = $this->helpers->getUser($xf);
-		$cg = [];
-		 if(isset($req['cg'])) $cg = $req['cg'];
 		
-		if(count($account) < 1) $account = $this->helpers->getUser($user->id);
-		$configs = $this->helpers->getConfigs($account['id']);
-		 if(isset($req['cg'])) $cg = $this->helpers->getConfig($account['id'],$req['cg']);
+		$drivers = $this->helpers->getDrivers();
+		
 		$signals = $this->helpers->signals;
-		#dd($account);
-    	return view('accounts',compact(['user','accounts','account','cg','configs','signals']));
+		dd($drivers);
+    	return view('drivers',compact(['user','drivers','signals']));
     }
 
 	/**
@@ -83,7 +77,7 @@ class MainController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getAddConfig(Request $request)
+	public function getAddDriver(Request $request)
     {
        $user = null;
        $req = $request->all();
@@ -98,17 +92,9 @@ class MainController extends Controller {
 			return redirect()->intended('login');
 		}
 		
-		$xf = isset($req['xf']) ? $req['xf'] : $user->email;
-		$accounts = $this->helpers->getUsers();
-		$account = $this->helpers->getUser($xf);
-		$cn = $this->helpers->getConfigNumber();
-		if(count($account) < 1) $account = $this->helpers->getUser($user->id);
-		$configs = $this->helpers->getConfigs($account['id']);
-		$cg = [];
-		 if(isset($req['cg'])) $cg = $this->helpers->getConfig($account['id'],$req['cg']);
 		$signals = $this->helpers->signals;
 		#dd($cg);
-    	return view('config',compact(['user','accounts','account','cg','configs','signals','cn']));
+    	return view('add-driver',compact(['user','signals']));
     }
 	
 	/**
@@ -116,7 +102,7 @@ class MainController extends Controller {
 	 *
 	 * @return Response
 	 */
-    public function postAddConfig(Request $request)
+    public function postAddDriver(Request $request)
     {
     	if(Auth::check())
 		{
@@ -128,14 +114,13 @@ class MainController extends Controller {
         }
         
         $req = $request->all();
-		#dd($req);
+		//dd($req);
         $validator = Validator::make($req, [
-                             'xf' => 'required|numeric',
-                             'cn' => 'required|numeric',
-                             'acname' => 'required',
-                             'acnum' => 'required|numeric',
-                             'balance' => 'required|numeric',
-                             'status' => 'required|not_in:none',
+                            'pass' => 'required|confirmed',
+                             'email' => 'required|email',                            
+                             'phone' => 'required|numeric',
+                             'fname' => 'required',
+                             'lname' => 'required',
          ]);
          
          if($validator->fails())
@@ -147,9 +132,15 @@ class MainController extends Controller {
          
          else
          {
-             $ret = $this->helpers->addConfig($req);
-	        session()->flash("config-status","ok");
-			return redirect()->intended('config');
+            $req['role'] = "driver";    
+            $req['status'] = "enabled";           
+            $req['verified'] = "user";  			
+            
+                       #dd($req);            
+
+            $user =  $this->helpers->createUser($req);
+			session()->flash("create-driver-status", "success");
+			return redirect()->intended('drivers');
          } 	  
     }
 

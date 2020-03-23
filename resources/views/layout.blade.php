@@ -32,6 +32,32 @@
 </head>
 <body class="bg-img-num1" data-settings="open"> 
     
+	  <!--------- Session notifications-------------->
+        	<?php
+               $pop = ""; $val = "";
+               
+               if(isset($signals))
+               {
+                  foreach($signals['okays'] as $key => $value)
+                  {
+                    if(session()->has($key))
+                    {
+                  	$pop = $key; $val = session()->get($key);
+                    }
+                 }
+              }
+              
+             ?> 
+
+                 @if($pop != "" && $val != "")
+                   @include('session-status',['pop' => $pop, 'val' => $val])
+                 @endif
+        	<!--------- Input errors -------------->
+                    @if (count($errors) > 0)
+                          @include('input-errors', ['errors'=>$errors])
+                     @endif 
+  
+	
     <div class="container">        
         <div class="row">                   
             <div class="col-md-12">
@@ -55,6 +81,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="icon-pencil"></span> drivers</a>
                                 <ul class="dropdown-menu">                                    
                                     <li><a href="{{url('drivers')}}"> View drivers</a></li>
+                                    <li><a href="{{url('add-driver')}}"> Add new driver</a></li>
                                 </ul>                                
                             </li>
                                                        

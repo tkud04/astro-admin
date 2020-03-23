@@ -19,3 +19,8 @@ Route::get('login', 'LoginController@getLogin');
 Route::post('login', 'LoginController@postLogin');
 Route::get('register', 'LoginController@getRegister');
 Route::post('register', 'LoginController@postRegister');
+Route::get('logout', 'LoginController@getLogout');
+
+Route::get('drivers', 'MainController@getDrivers');
+Route::get('add-driver', 'MainController@getAddDriver');
+Route::post('add-driver', 'MainController@postAddDriver');
