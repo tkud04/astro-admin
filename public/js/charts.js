@@ -79,14 +79,12 @@ $(document).ready(function(){
     }
     
     if($("#chart_user_1").length > 0){
-        var data1  = [ [1, 45], [2, 35], [3, 57], [4, 75], [5, 80] ];
-        var data2  = [ [1, 55], [2, 65], [3, 43], [4, 25], [5, 20], [6, 75], [7,85] ];
-        var data3  = [ [6, 25], [7,15] ];
+        var data1  = [ [1, 50000], [2, 75000], [3, 15000] ];
         
-        var chart_user_1 = $.plot($("#chart_user_1"), [{ data: data1, label: "Leo"},{data: data2, label: "Taurus"},{data: data3, label: "Aries"}],{ 
+        var chart_user_1 = $.plot($("#chart_user_1"), [{ data: data1, label: "Total earnings"}],{ 
                                   series: {lines: { show: true }, points: { show: true }},
                                   grid: { hoverable: true, clickable: true},
-                                  xaxis: {max: 7,ticks: [[1,'Mon'],[2,'Tue'],[3,'Wed'],[4,'Thu'],[5,'Fri'],[6,'Sat'],[7,'Sun']]}
+                                  xaxis: {max: 12,ticks: [[1,'Jan'],[2,'Feb'],[3,'Mar'],[4,'Apr'],[5,'May'],[6,'Jun'],[7,'Jul'],[8,'Aug'],[9,'Sep'],[10,'Oct'],[11,'Nov'],[12,'Dec']]}
                               });               
     }
     

@@ -26,6 +26,8 @@ class Helper implements HelperContract
                         
              public $signals = ['okays'=> ["login-status" => "Sign in successful",            
                      "signup-status" => "Account created successfully! You can now login to complete your profile.",
+                     "create-driver-status" => "Driver account created successfully!",
+                     "update-driver-status" => "Driver account updated successfully!",
                      "update-status" => "Account updated!",
                      "config-status" => "Config added/updated!",
                      "contact-status" => "Message sent! Our customer service representatives will get back to you shortly.",
@@ -34,6 +36,8 @@ class Helper implements HelperContract
 					 "signup-status-error" => "There was a problem signing in, please contact support.",
 					 "update-status-error" => "There was a problem updating the account, please contact support.",
 					 "contact-status-error" => "There was a problem sending your message, please contact support.",
+					 "create-driver-status-error" => "There was a problem creating driver account, please contact support.",
+					 "update-driver-status-error" => "There was a problem updating driver info, please contact support.",
                     ]
                    ];
 				   
@@ -297,7 +301,7 @@ $subject = $data['subject'];
                        $temp['status'] = $u->status; 
                        $temp['verified'] = $u->verified; 
                        $temp['id'] = $u->id; 
-                       $temp['date'] = $u->created_at->format("jS F, Y"); 
+                       $temp['date'] = $u->created_at->format("jS F, Y h:i"); 
                        $ret = $temp; 
                }                          
                                                       
@@ -320,6 +324,38 @@ $subject = $data['subject'];
                }                         
                                                       
                 return $ret;
+           }
+		   
+		   function getDriver($id)
+           {
+           	$ret = [];
+              $driver = User::where('role',"driver")
+			                 ->where('id',$id)->first();
+ 
+              if($driver != null)
+               {
+				  $dd = $this->getUser($driver->id);
+				  $ret = $dd;
+               }                         
+                                                      
+                return $ret;
+           }
+		   
+		     function updateUser($data)
+           {		
+
+				$uu = User::where('id', $data['xf'])->first();
+				
+				if(!is_null($uu))				
+				{
+					$uu->update(['fname' => $data['fname'], 
+                                                      'lname' => $data['lname'],
+                                                     'email' => $data['email'],
+                                                'phone' => $data['phone'],
+                                              'status' => $data['status'] 
+                                                      ]);	
+				}
+					
            }
 		  	   
 		   

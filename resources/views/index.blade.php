@@ -9,14 +9,14 @@
                     <div class="user bg-default bg-light-rtl">
                         <div class="info">                                                                                
                             <a href="#" class="informer informer-three">
-                                <span>14 / 255</span>
-                                Messages
+                                <span>{{$user->fname}}</span>
+									{{$user->lname}}
                             </a>                            
                             <a href="#" class="informer informer-four">
-                                <span>$549.44</span>
-                                Balance
+                                <span>Admin</span>
+                                Role
                             </a>                                                        
-                            <img src="img/example/user/dmitry_b.jpg" class="img-circle img-thumbnail"/>
+                            <img src="img/icon.png" class="img-circle img-thumbnail"/>
                         </div>
                     </div>
                     <div class="content list-group list-group-icons">

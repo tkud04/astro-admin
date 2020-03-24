@@ -12,13 +12,15 @@
     
     <script type='text/javascript' src='js/plugins/jquery/jquery.min.js'></script>
     <script type='text/javascript' src='js/plugins/jquery/jquery-ui.min.js'></script>
+	    <script type='text/javascript' src='js/plugins/bootstrap/bootstrap.min.js'></script>
     <script type='text/javascript' src='js/plugins/jquery/jquery-migrate.min.js'></script>
     <script type='text/javascript' src='js/plugins/jquery/globalize.js'></script>    
-    <script type='text/javascript' src='js/plugins/bootstrap/bootstrap.min.js'></script>
     
     <script type='text/javascript' src='js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js'></script>
     <script type='text/javascript' src='js/plugins/uniform/jquery.uniform.min.js'></script>
-    
+        <script type='text/javascript' src='js/plugins/datatables/jquery.dataTables.min.js'></script>
+        <script type='text/javascript' src='js/plugins/fancybox/jquery.fancybox.pack.js'></script>
+		
     <script type='text/javascript' src='js/plugins/knob/jquery.knob.js'></script>
     <script type='text/javascript' src='js/plugins/sparkline/jquery.sparkline.min.js'></script>
     <script type='text/javascript' src='js/plugins/flot/jquery.flot.js'></script>     

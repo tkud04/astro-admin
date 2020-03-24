@@ -68,8 +68,46 @@ class MainController extends Controller {
 		$drivers = $this->helpers->getDrivers();
 		
 		$signals = $this->helpers->signals;
-		dd($drivers);
+		//dd($drivers);
     	return view('drivers',compact(['user','drivers','signals']));
+    }
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+	public function getDriver(Request $request)
+    {
+       $user = null;
+       $req = $request->all();
+       
+		
+		if(Auth::check())
+		{
+			$user = Auth::user();
+			$req = $request->all();
+			
+            $validator = Validator::make($req, [                            
+                             'id' => 'required',
+            ]);
+         
+            if($validator->fails())
+            {
+               return redirect()->intended('drivers');
+            }
+         
+            else
+            {
+              $driver = $this->helpers->getDriver($req['id']);
+			  $signals = $this->helpers->signals;
+		      return view('driver',compact(['user','driver','signals']));
+            }
+		}
+		else
+		{
+			return redirect()->intended('login');
+		}	
     }
 
 	/**
@@ -140,6 +178,87 @@ class MainController extends Controller {
 
             $user =  $this->helpers->createUser($req);
 			session()->flash("create-driver-status", "success");
+			return redirect()->intended('drivers');
+         } 	  
+    }
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+	public function getEditDriver(Request $request)
+    {
+       $user = null;
+       $req = $request->all();
+       
+		
+		if(Auth::check())
+		{
+			$user = Auth::user();
+			$req = $request->all();
+			
+            $validator = Validator::make($req, [                            
+                             'id' => 'required',
+            ]);
+         
+            if($validator->fails())
+            {
+               return redirect()->intended('drivers');
+            }
+         
+            else
+            {
+              $driver = $this->helpers->getDriver($req['id']);
+			  $signals = $this->helpers->signals;
+			  $xf = $req['id'];
+		      return view('edit-driver',compact(['user','driver','xf','signals']));
+            }
+		}
+		else
+		{
+			return redirect()->intended('login');
+		}	
+    }
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+    public function postEditDriver(Request $request)
+    {
+    	if(Auth::check())
+		{
+			$user = Auth::user();
+		}
+		else
+        {
+        	return redirect()->intended('login');
+        }
+        
+        $req = $request->all();
+		#dd($req);
+        $validator = Validator::make($req, [
+                             'xf' => 'required',                            
+                             'email' => 'required|email',                            
+                             'phone' => 'required|numeric',
+                             'fname' => 'required',
+                             'lname' => 'required',
+                             'status' => 'required|not_in:none',
+         ]);
+         
+         if($validator->fails())
+         {
+             $messages = $validator->messages();
+             return redirect()->back()->withInput()->with('errors',$messages);
+             //dd($messages);
+         }
+         
+         else
+         {
+            $this->helpers->updateUser($req);
+			session()->flash("update-driver-status", "success");
 			return redirect()->intended('drivers');
          } 	  
     }
