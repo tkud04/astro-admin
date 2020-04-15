@@ -594,6 +594,19 @@ $subject = $data['subject'];
 			
 			return $ret;
 		   }
+		   
+		    function checkNumber($num)
+           {
+           	$ret = ['status' => 'ok', 'exists' => false];
+               $u = User::where('phone',$num)->first();
+ 
+              if($u != null)
+               {
+                   	$ret['exists'] = true; 
+               }                          
+                                                      
+                return $ret;
+           }
 		  	   
 		   
 		
