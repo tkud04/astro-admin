@@ -573,7 +573,33 @@ $subject = $data['subject'];
             {
             	//Login successful               
                $user = Auth::user();          
-			   $dt = $this->getUser($user->id);
+			   $u = $this->getUser($user->id);
+			   $ud = $u['data'];
+			   /**
+			   	$temp['fname'] = $u->fname; 
+                       $temp['lname'] = $u->lname; 
+                       $temp['phone'] = $u->phone; 
+                       $temp['phone_status'] = $u->phone_status; 
+                       $temp['email'] = $u->email; 
+                       $temp['email_status'] = $u->email_status; 
+                       $temp['role'] = $u->role; 
+                       $temp['status'] = $u->status; 
+                       $temp['type'] = $u->type; 
+                       $temp['id'] = $u->id; 
+                       $temp['tk'] = $u->tk; 
+                       $temp['date'] = $u->created_at->format("jS F, Y h:i"); 
+			   **/
+			   $dt = [
+			     'fname' => $u['fname'],
+			     'lname' => $u['lname'],
+			     'phone' => $u['phone'],
+			     'email' => $u['email'],
+			     'status' => $u['status'],
+			     'type' => $u['type'],
+			     'tk' => $u['tk'],
+			     'img' => $ud['img'],
+			     'gender' => $ud['gender']
+			   ];
 			   
 			   /**
 			   $products = $this->getProducts($user);
