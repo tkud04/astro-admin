@@ -12,7 +12,7 @@
 				$phone = $driver['phone'];
 				$status = $driver['status'];
 				$created_at = $driver['date'];
-				$ss = ($status == "enabled") ? "success" : "danger";
+				
 			 ?>
 			 
 			<form method="post" action="{{$uu}}">
@@ -44,7 +44,17 @@
                             <div class="col-md-9">
 							 <select class="form-control" name="status">
 							   <option value="none">Set status</option>
-							   <option value="enabled">Enabled</option>
+							   <?php
+							    $statuses = ['enabled' => "Enabled", 'pending' => "Pending", 'disabled' => "Disabled"];
+								
+								foreach($statuses as $key => $value)
+								{
+								  $ss = $key == $status ? "selected='selected'" : "";
+							   ?>
+							   <option value="{{$key}}" {{$ss}}>{{$value}}</option>
+                               <?php
+								}
+							   ?>
 							   <option value="pending">Pending</option>
 							   <option value="suspended">Suspended</option>
 							 </select>

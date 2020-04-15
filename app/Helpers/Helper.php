@@ -9,6 +9,9 @@ use Auth;
 use \Swift_Mailer;
 use \Swift_SmtpTransport;
 use App\User;
+use App\UserData;
+use App\Settings;
+use App\DriverLocations;
 use GuzzleHttp\Client;
 
 class Helper implements HelperContract
@@ -224,13 +227,51 @@ $subject = $data['subject'];
            {
            	$ret = User::create([
                                                       'email' => $data['email'], 
+                                                      'email_status' => "unverified", 
                                                       'phone' => $data['phone'], 
+													  'phone_status' => "verified",
+                                                      'tk' => $data['tk'], 
                                                       'fname' => $data['fname'], 
                                                       'lname' => $data['lname'], 
                                                       'role' => $data['role'], 
                                                       'status' => "enabled", 
-                                                      'verified' => "yes", 
+                                                      'type' => $data['type'], 
                                                       'password' => bcrypt($data['pass']), 
+													  
+                                                      ]);
+			$data['user_id'] = $ret->id;
+			
+			switch($data['type'])
+			{
+				case "driver":
+				  $ud = $this->createDriverData($data);
+				break;
+				
+				case "user":
+				  $ud = $this->createUserData($data);
+				break;
+			}
+                                                      
+                return $ret;
+           }
+		   
+		   function createUserData($data)
+           {
+           	$ret = UserData::create([
+                                                      'user_id' => $data['user_id'],
+                                                      'gender' => $data['gender'],
+													  'img' => $data['img'], 
+                                                      ]);
+                                                      
+                return $ret;
+           }
+		   
+		   function createDriverData($data)
+           {
+           	$ret = DriverData::create([
+                                                      'user_id' => $data['user_id'],
+                                                      'gender' => $data['gender'],
+													  'img' => $data['img'], 
                                                       ]);
                                                       
                 return $ret;
@@ -286,6 +327,13 @@ $subject = $data['subject'];
 		   
 		   function getUser($id)
            {
+			   /**
+                                                      'tk' => $data['tk'], 
+                                                      'role' => $data['role'], 
+                                                      'status' => "enabled", 
+                                                      'type' => $data['type'], 
+                                                      'password' => bcrypt($data['pass']), 
+			   **/
            	$ret = [];
                $u = User::where('email',$id)
 			            ->orWhere('id',$id)->first();
@@ -294,56 +342,97 @@ $subject = $data['subject'];
                {
                    	$temp['fname'] = $u->fname; 
                        $temp['lname'] = $u->lname; 
-                       //$temp['wallet'] = $this->getWallet($u);
                        $temp['phone'] = $u->phone; 
+                       $temp['phone_status'] = $u->phone_status; 
                        $temp['email'] = $u->email; 
+                       $temp['email_status'] = $u->email_status; 
                        $temp['role'] = $u->role; 
                        $temp['status'] = $u->status; 
-                       $temp['verified'] = $u->verified; 
+                       $temp['type'] = $u->type; 
                        $temp['id'] = $u->id; 
+                       $temp['tk'] = $u->tk; 
                        $temp['date'] = $u->created_at->format("jS F, Y h:i"); 
+					   
+					   switch($temp['type'])
+					   {
+						   case "driver":
+						    $temp['data'] = $this->getDriverData($temp['id']);
+						   break;
+						   
+						   case "user":
+						    $temp['data'] = $this->getUserData($temp['id']);
+						   break;
+					   }
+					   
                        $ret = $temp; 
                }                          
                                                       
                 return $ret;
            }
 		   
-		   
-		   function getDrivers()
+		   function getUserData($id)
            {
            	$ret = [];
-              $drivers = User::where('role',"driver")->get();
+              $ud = UserData::where('id',$id)->first();
  
-              if($drivers != null)
+              if($ud != null)
                {
-				  foreach($drivers as $d)
+				  $ret['id'] = $ud->id;
+				  $ret['user_id'] = $ud->user_id;
+				  $ret['gender'] = $ud->gender;
+				  $ret['img'] = $ud->img;
+               }                         
+                                                      
+                return $ret;
+           }
+		   
+		   function getDriverData($id)
+           {
+           	$ret = [];
+              $ud = DriverData::where('id',$id)->first();
+ 
+              if($ud != null)
+               {
+				  $ret['id'] = $ud->id;
+				  $ret['user_id'] = $ud->user_id;
+				  $ret['gender'] = $ud->gender;
+				  $ret['img'] = $ud->img;
+               }                         
+                                                      
+                return $ret;
+           }
+		   
+		   
+		   function getUsers($type="")
+           {
+           	$ret = [];
+			  $users = null;
+			  
+              if($type == "")
+			  {
+				$users = User::where('id','>',"0")->get();  
+			  } 
+			  else
+			  {
+				$users = User::where('type',$type)->get();  
+			  }
+              
+ 
+              if($users != null)
+               {
+				  foreach($users as $u)
 				  {
-					  $dd = $this->getUser($d->id);
-					  array_push($ret,$dd);
+					  $uu = $this->getUser($u->id);
+					  array_push($ret,$uu);
 				  }
                }                         
                                                       
                 return $ret;
            }
 		   
-		   function getDriver($id)
-           {
-           	$ret = [];
-              $driver = User::where('role',"driver")
-			                 ->where('id',$id)->first();
- 
-              if($driver != null)
-               {
-				  $dd = $this->getUser($driver->id);
-				  $ret = $dd;
-               }                         
-                                                      
-                return $ret;
-           }
 		   
-		     function updateUser($data)
+		   function updateUser($data)
            {		
-
 				$uu = User::where('id', $data['xf'])->first();
 				
 				if(!is_null($uu))				
@@ -351,12 +440,159 @@ $subject = $data['subject'];
 					$uu->update(['fname' => $data['fname'], 
                                                       'lname' => $data['lname'],
                                                      'email' => $data['email'],
+                                                     'email_status' => $data['email_status'],
                                                 'phone' => $data['phone'],
-                                              'status' => $data['status'] 
-                                                      ]);	
+                                                'phone_status' => $data['phone_status'],
+                                              'role' => $data['role'], 
+                                              'type' => $data['type'], 
+                                              'status' => $data['status'], 
+                                              'tk' => $data['tk'] 
+                                                      ]);
+
+                  switch($uu->type)
+				  {
+					  case "driver":
+					    $this->updateDriverData($data);
+					  break;
+					  
+					  case "user":
+					    $this->updateUserData($data);
+					  break;
+				  }													  
 				}
 					
            }
+		   
+		   function updateUserData($data)
+           {		
+				$ud = UserData::where('user_id', $data['xf'])->first();
+				
+				if(!is_null($ud))				
+				{
+					$ud->update(['gender' => $data['gender'], 
+                                                      'img' => $data['img']
+                                                      ]);												  
+				}
+					
+           }
+
+		   function updateDriverData($data)
+           {		
+				$ud = DriverData::where('user_id', $data['xf'])->first();
+				
+				if(!is_null($ud))				
+				{
+					$ud->update(['gender' => $data['gender'], 
+                                                      'img' => $data['img']
+                                                      ]);												  
+				}
+					
+           }
+		   
+		    function isAdmin($user)
+           {
+           	$ret = false; 
+               if($user->role === "admin" || $user->role === "su") $ret = true; 
+           	return $ret;
+           }
+		   
+		   function isValidUser($data)
+		   {
+			 return (Auth::attempt(['email' => $data['id'],'password' => $data['password'],'status'=> "enabled"]) || Auth::attempt(['phone' => $data['id'],'password' => $data['password'],'status'=> "enabled"]));
+		   }
+		   
+		    function getSettings()
+           {
+           	$ret = [];
+              $settings = Settings::where('id','>',"0")->get();
+ 
+              if($settings != null)
+               {
+				  foreach($settings as $s)
+				  {
+					  $temp = [];
+					  $temp['item'] = $s->item;
+					  $temp['value'] = $s->value;
+					  array_push($ret,$temp);
+				  }
+               }                         
+                                                      
+                return $ret;
+           }
+
+		   function getDriverLocations()
+           {
+           	$ret = [];
+              $locs = DriverLocations::where('id','>',"0")->get();
+ 
+              if($locs != null)
+               {
+				  foreach($locs as $l)
+				  {
+					  $temp = [];
+					  $temp['driver_id'] = $l->driver_id;
+					  $temp['latlng'] = $l->latlng;
+					  array_push($ret,$temp);
+				  }
+               }                         
+                                                      
+                return $ret;
+           }
+		   
+		   function updateDriverLocation($data)
+           {		
+
+				$dl = DriverLocations::where('id', $data['driver_id'])->first();
+				
+				if(is_null($dl))
+                {
+					DriverLocations::create([
+					              'driver_id' => $data['driver_id'], 
+                                  'latlng' => $data['latlng']
+				}	
+                else				
+				{
+					$dl->update(['latlng' => $data['latlng']]);	
+				}
+					
+           }
+		   
+		    function appSignup($data)
+		   {
+			$this->createUser($data);
+			$ret = ['status' => "ok",'message' => "User created"];
+			
+			return $ret;
+		   }
+		   
+		   function appLogin($data)
+		   {
+			 //authenticate this login
+            if($this->isValidUser($data))
+            {
+            	//Login successful               
+               $user = Auth::user();          
+			   $dt = $this->getUser($user->id);
+			   
+			   /**
+			   $products = $this->getProducts($user);
+			   $customers = $this->getCustomers($user);
+			   $sales = $this->getSales($user);
+			   **/
+			   
+			   $ret = [
+			     'status' => "ok",
+				 'user' => $dt
+				];
+            }
+			
+			else
+			{
+				$ret = ['status' => "error",'message' => "Login failed, please contact support"];
+			}
+			
+			return $ret;
+		   }
 		  	   
 		   
 		

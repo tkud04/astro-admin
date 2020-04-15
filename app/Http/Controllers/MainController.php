@@ -27,10 +27,15 @@ class MainController extends Controller {
 	public function getIndex()
     {
        $user = null;
-
+        
 		if(Auth::check())
 		{
 			$user = Auth::user();
+		if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
 		}
 		else
 		{
@@ -54,10 +59,15 @@ class MainController extends Controller {
        $user = null;
        $req = $request->all();
        
-		
 		if(Auth::check())
 		{
 			$user = Auth::user();
+			
+		if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
 		}
 		else
 		{
@@ -86,6 +96,12 @@ class MainController extends Controller {
 		if(Auth::check())
 		{
 			$user = Auth::user();
+
+			if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}  
 			$req = $request->all();
 			
             $validator = Validator::make($req, [                            
@@ -124,6 +140,11 @@ class MainController extends Controller {
 		if(Auth::check())
 		{
 			$user = Auth::user();
+			if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
 		}
 		else
 		{
@@ -145,6 +166,11 @@ class MainController extends Controller {
     	if(Auth::check())
 		{
 			$user = Auth::user();
+			if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
 		}
 		else
         {
@@ -196,6 +222,11 @@ class MainController extends Controller {
 		if(Auth::check())
 		{
 			$user = Auth::user();
+			if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
 			$req = $request->all();
 			
             $validator = Validator::make($req, [                            
@@ -231,6 +262,91 @@ class MainController extends Controller {
     	if(Auth::check())
 		{
 			$user = Auth::user();
+			if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
+		}
+		else
+        {
+        	return redirect()->intended('login');
+        }
+        
+        $req = $request->all();
+		#dd($req);
+        $validator = Validator::make($req, [
+                             'xf' => 'required',                            
+                             'email' => 'required|email',                            
+                             'phone' => 'required|numeric',
+                             'fname' => 'required',
+                             'lname' => 'required',
+                             'status' => 'required|not_in:none',
+         ]);
+         
+         if($validator->fails())
+         {
+             $messages = $validator->messages();
+             return redirect()->back()->withInput()->with('errors',$messages);
+             //dd($messages);
+         }
+         
+         else
+         {
+            $this->helpers->updateUser($req);
+			session()->flash("update-driver-status", "success");
+			return redirect()->intended('drivers');
+         } 	  
+    }
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+	public function getSettings(Request $request)
+    {
+       $user = null;
+       $req = $request->all();
+       
+		
+		if(Auth::check())
+		{
+			$user = Auth::user();
+			if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
+			$req = $request->all();
+			
+            
+              $settings = $this->helpers->getSettings();
+			  $signals = $this->helpers->signals;
+		      return view('settings',compact(['user','settings','signals']));
+     
+		}
+		else
+		{
+			return redirect()->intended('login');
+		}	
+    }
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+    public function postSettings(Request $request)
+    {
+    	if(Auth::check())
+		{
+			$user = Auth::user();
+			if(!$this->helpers->isAdmin($user))
+			{
+				Auth::logout();
+				 return redirect()->intended('/');
+			}
 		}
 		else
         {
@@ -264,123 +380,7 @@ class MainController extends Controller {
     }
 
     /**
-	 * Show the application welcome screen to the user.
-	 *
-	 * @return Response
-	 */
-    public function postViewAccount(Request $request)
-    {
-    	if(Auth::check())
-		{
-			$user = Auth::user();
-		}
-		else
-        {
-        	return redirect()->intended('login');
-        }
-        
-        $req = $request->all();
-		#dd($req);
-        $validator = Validator::make($req, [
-                             'acc' => 'required|numeric|not_in:none',
-         ]);
-         
-         if($validator->fails())
-         {
-             $messages = $validator->messages();
-             return redirect()->intended('accounts?xf='.$user->id);
-             //dd($messages);
-         }
-         
-         else
-         {
-			 $uu = 'accounts?xf='.$req['acc'];
-			 if(isset($req['xf'])) $uu = 'accounts?xf='.$req['xf'].'&cg='.$req['acc'];
-         	 return redirect()->intended($uu);
-         }  
-    }
 	
-	/**
-	 * Show the application welcome screen to the user.
-	 *
-	 * @return Response
-	 */
-    public function postViewConfig(Request $request)
-    {
-    	if(Auth::check())
-		{
-			$user = Auth::user();
-		}
-		else
-        {
-        	return redirect()->intended('login');
-        }
-        
-        $req = $request->all();
-		#dd($req);
-        $validator = Validator::make($req, [
-                             'acc' => 'required|numeric|not_in:none',
-         ]);
-         
-         if($validator->fails())
-         {
-             $messages = $validator->messages();
-             $uu = 'config';
-			 if(isset($req['xf'])) $uu = 'config?xf='.$req['xf'];
-         	 return redirect()->intended($uu);
-             //dd($messages);
-         }
-         
-         else
-         {
-         	 $uu = 'config?cg='.$req['acc'];
-			 if(isset($req['xf'])) $uu = 'config?xf='.$req['xf'].'&cg='.$req['acc'];
-         	 return redirect()->intended($uu);
-         }  
-    }
-
-  /**
-	 * Show the application welcome screen to the user.
-	 *
-	 * @return Response
-	 */
-    public function postAccounts(Request $request)
-    {
-    	if(Auth::check())
-		{
-			$user = Auth::user();
-		}
-		else
-        {
-        	return redirect()->intended('login');
-        }
-        
-        $req = $request->all();
-		#dd($req);
-        $validator = Validator::make($req, [
-                             'fname' => 'required',
-                             'lname' => 'required',
-                             'email' => 'required|email',
-                             'phone' => 'required|numeric',
-                             'acnum' => 'required|numeric',
-                             'balance' => 'required|numeric',
-                             'status' => 'required|not_in:none',
-         ]);
-         
-         if($validator->fails())
-         {
-             $messages = $validator->messages();
-             return redirect()->back()->withInput()->with('errors',$messages);
-             //dd($messages);
-         }
-         
-         else
-         {
-             $ret = $this->helpers->updateUser($req);
-	        session()->flash("update-status","ok");
-			return redirect()->intended('accounts');
-         } 	  
-    }
 
 	
     

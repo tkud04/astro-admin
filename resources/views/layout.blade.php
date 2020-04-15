@@ -86,6 +86,9 @@
                                     <li><a href="{{url('add-driver')}}"> Add new driver</a></li>
                                 </ul>                                
                             </li>
+							<li>
+                                <a href="{{url('settings')}}"><span class="icon-cogs"></span> settings</a>              
+                            </li>
                                                        
                         </ul>
                         <form class="navbar-form navbar-right" role="search" action="{{url('search')}}" method="post">

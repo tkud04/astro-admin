@@ -27,3 +27,4 @@ Route::get('logout', 'MobileAppController@getLogout');
 Route::post('sync', 'MobileAppController@postAppSync');
 Route::get('check-number', 'MobileAppController@getCheckNumber');
 Route::get('decode-points', 'MobileAppController@getDecodePoints');
+Route::get('get-driver-locations', 'MobileAppController@getDriverLocations');

@@ -27,3 +27,6 @@ Route::get('add-driver', 'MainController@getAddDriver');
 Route::post('add-driver', 'MainController@postAddDriver');
 Route::get('edit-driver', 'MainController@getEditDriver');
 Route::post('edit-driver', 'MainController@postEditDriver');
+
+Route::get('settings', 'MainController@getSettings');
+Route::post('settings', 'MainController@postSettings');

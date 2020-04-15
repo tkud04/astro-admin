@@ -201,6 +201,23 @@ class MobileAppController extends Controller {
 
          return json_encode($ret);		 
     }
+
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+    public function getDriverLocations(Request $request)
+    {
+    	$user = null;
+        
+        $req = $request->all();
+		#dd($req);
+        
+		$ret = $this->helpers->getDriverLocations();
+
+         return json_encode($ret);		 
+    }
 	
     
     /**
