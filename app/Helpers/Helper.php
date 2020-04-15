@@ -373,7 +373,7 @@ $subject = $data['subject'];
 		   function getUserData($id)
            {
            	$ret = [];
-              $ud = UserData::where('id',$id)->first();
+              $ud = UserData::where('user_id',$id)->first();
  
               if($ud != null)
                {
@@ -389,7 +389,7 @@ $subject = $data['subject'];
 		   function getDriverData($id)
            {
            	$ret = [];
-              $ud = DriverData::where('id',$id)->first();
+              $ud = DriverData::where('user_id',$id)->first();
  
               if($ud != null)
                {
