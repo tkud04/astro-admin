@@ -549,6 +549,7 @@ $subject = $data['subject'];
 					DriverLocations::create([
 					              'driver_id' => $data['driver_id'], 
                                   'latlng' => $data['latlng']
+								  ]);
 				}	
                 else				
 				{
