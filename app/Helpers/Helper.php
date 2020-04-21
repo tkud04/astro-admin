@@ -649,7 +649,7 @@ $subject = $data['subject'];
                    	$ret = Locations::create([
                                                       'user_id' => $u->id,
                                                       'latlng' => $latlng,
-													  'fav' => $data['addrefavss'], 
+													  'fav' => $data['fav'], 
 													  'address' => $data['address'], 
                                                       ]);
                }                                      
