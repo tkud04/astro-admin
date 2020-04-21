@@ -248,7 +248,7 @@ class MobileAppController extends Controller {
          
          else
          {
-             $ret = $this->helpers->addLocation($req[]);
+             $ret = $this->helpers->addLocation($req);
          }
 
          return json_encode($ret);		 

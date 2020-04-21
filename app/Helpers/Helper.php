@@ -637,7 +637,7 @@ $subject = $data['subject'];
                 return $ret;
            }
 		 
-		 function createLocation($data)
+		 function addLocation($data)
            {
 			   $u = User::where('email',$data['id'])->first();
                 $ret = ['status' => "error", 'message' => "Invalid user"];
