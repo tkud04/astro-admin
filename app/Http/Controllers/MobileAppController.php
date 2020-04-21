@@ -83,10 +83,10 @@ class MobileAppController extends Controller {
         $req = $request->all();
 		#dd($req);
         $validator = Validator::make($req, [
-                             'email' => 'required|email',
+                             'email' => 'required|email|unique:users',
                              'id' => 'required',
                              'gender' => 'required',
-                             'to' => 'required|numeric',
+                             'to' => 'required|numeric|unique:users',
                              'fname' => 'required',
                              'lname' => 'required',
                              'password' => 'required|min:6',                        
@@ -215,6 +215,41 @@ class MobileAppController extends Controller {
 		#dd($req);
         
 		$ret = $this->helpers->getDriverLocations();
+
+         return json_encode($ret);		 
+    }
+	
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+    public function getAddLocation(Request $request)
+    {
+    	$user = null;
+        
+        $req = $request->all();
+		#dd($req);
+        $validator = Validator::make($req, [
+                             'id' => 'required',                     
+                             'fav' => 'required',                     
+                             'address' => 'required',                     
+                             'lat' => 'required',                     
+                             'lng' => 'required'                     
+         ]);
+         
+         if($validator->fails())
+         {
+             $messages = $validator->messages();
+             $ret = ['status' => "error",'message'=>"Validation error"];
+             //dd($messages);
+         }
+         
+         else
+         {
+             $ret = $this->helpers->addLocation($req[]);
+         }
 
          return json_encode($ret);		 
     }

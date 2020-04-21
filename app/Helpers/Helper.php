@@ -10,8 +10,11 @@ use \Swift_Mailer;
 use \Swift_SmtpTransport;
 use App\User;
 use App\UserData;
+use App\DriverData;
 use App\Settings;
 use App\DriverLocations;
+use App\Locations;
+use App\Trips;
 use GuzzleHttp\Client;
 
 class Helper implements HelperContract
@@ -633,7 +636,46 @@ $subject = $data['subject'];
                                                       
                 return $ret;
            }
-		  	   
+		 
+		 function createLocation($data)
+           {
+			   $u = User::where('email',$data['id'])->first();
+                $ret = ['status' => "error", 'message' => "Invalid user"];
+				
+              if($u != null)
+               {
+				   $latlng = $data['lat'].",".$data['lng'];
+				   
+                   	$ret = Locations::create([
+                                                      'user_id' => $u->id,
+                                                      'latlng' => $latlng,
+													  'address' => $data['address'], 
+                                                      ]);
+               }                                      
+                return $ret;
+           }
+		   
+		   
+		   function getLocations($data)
+           {
+           	$ret = [];
+              $locs = Locations::where('user_id',$data['user_id'])->get();
+ 
+              if($locs != null)
+               {
+				  foreach($locs as $l)
+				  {
+					  $temp = [];
+					  $temp['id'] = $l->id;
+					  $temp['user_id'] = $l->user_id;
+					  $temp['address'] = $l->address;
+					  $temp['latlng'] = $l->latlng;
+					  array_push($ret,$temp);
+				  }
+               }                         
+                                                      
+                return $ret;
+           }
 		   
 		
 		
