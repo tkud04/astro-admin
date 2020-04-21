@@ -649,6 +649,7 @@ $subject = $data['subject'];
                    	$ret = Locations::create([
                                                       'user_id' => $u->id,
                                                       'latlng' => $latlng,
+													  'fav' => $data['addrefavss'], 
 													  'address' => $data['address'], 
                                                       ]);
                }                                      
@@ -668,6 +669,7 @@ $subject = $data['subject'];
 					  $temp = [];
 					  $temp['id'] = $l->id;
 					  $temp['user_id'] = $l->user_id;
+					  $temp['fav'] = $l->fav;
 					  $temp['address'] = $l->address;
 					  $temp['latlng'] = $l->latlng;
 					  array_push($ret,$temp);

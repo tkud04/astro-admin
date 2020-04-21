@@ -13,6 +13,6 @@ class Locations extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'latlng', 'address'
+        'user_id', 'fav', 'latlng', 'address'
     ];
 }
