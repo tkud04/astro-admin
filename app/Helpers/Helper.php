@@ -661,7 +661,7 @@ $subject = $data['subject'];
 		   function getLocations($data)
            {
            	$ret = [];
-              $locs = Locations::where('email',$data['id'])->get();
+              $locs = Locations::where('user_id',$data['id'])->get();
  
               if($locs != null)
                {
