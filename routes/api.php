@@ -29,3 +29,4 @@ Route::get('check-number', 'MobileAppController@getCheckNumber');
 Route::get('decode-points', 'MobileAppController@getDecodePoints');
 Route::get('get-driver-locations', 'MobileAppController@getDriverLocations');
 Route::get('add-location', 'MobileAppController@getAddLocation');
+Route::get('get-locations', 'MobileAppController@getLocations');

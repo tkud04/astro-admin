@@ -254,6 +254,36 @@ class MobileAppController extends Controller {
          return json_encode($ret);		 
     }
 	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+    public function getLocations(Request $request)
+    {
+    	$user = null;
+        
+        $req = $request->all();
+		#dd($req);
+        $validator = Validator::make($req, [
+                             'id' => 'required'                   
+         ]);
+         
+         if($validator->fails())
+         {
+             $messages = $validator->messages();
+             $ret = ['status' => "error",'message'=>"Validation error"];
+             //dd($messages);
+         }
+         
+         else
+         {
+             $ret = $this->helpers->getLocations($req);
+         }
+
+         return json_encode($ret);		 
+    }
+	
     
     /**
 	 * Show the application welcome screen to the user.
