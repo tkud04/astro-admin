@@ -53,6 +53,7 @@ class MobileAppController extends Controller {
          
          else
          {
+			 $req['type'] = "user";
              $ret = $this->helpers->appLogin($req);
          }
 
@@ -102,6 +103,89 @@ class MobileAppController extends Controller {
          else
          {
 			 $req['role'] = "user";
+			 $req['type'] = "user";
+             $ret = $this->helpers->appSignup($req);
+         }
+
+         return json_encode($ret);		 
+    }
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 */
+    public function getDriverLogin(Request $request)
+    {
+    	$user = null;
+        
+        $req = $request->all();
+		#dd($req);
+        $validator = Validator::make($req, [
+                             'id' => 'required|min:6',
+                             'password' => 'required|min:6',                        
+         ]);
+         
+         if($validator->fails())
+         {
+             $messages = $validator->messages();
+             $ret = ['status' => "error",'message'=>"Invalid username or password."];
+             //dd($messages);
+         }
+         
+         else
+         {
+			 $req['type'] = "driver";
+             $ret = $this->helpers->appLogin($req);
+         }
+
+         return json_encode($ret);		 
+    }
+	
+	/**
+	 * Show the application welcome screen to the user.
+	 *
+	 * @return Response
+	 
+	 this.dt:  Object {
+  "code": 4062,
+  "codeConfirm": "4062",
+  "email": "kudayisitobi@gmail.com",
+  "fname": "Tobi",
+  "gender": "male",
+  "id": "user_987401",
+  "lname": "Kudayisi",
+  "password": "kudayisi",
+  "to": "07054291601",
+}
+	 */
+    public function getDriverSignup(Request $request)
+    {
+    	$user = null;
+        
+        $req = $request->all();
+		#dd($req);
+        $validator = Validator::make($req, [
+                             'email' => 'required|email|unique:users',
+                             'id' => 'required',
+                             'gender' => 'required',
+                             'to' => 'required|numeric|unique:users',
+                             'fname' => 'required',
+                             'lname' => 'required',
+                             'password' => 'required|min:6',                        
+         ]);
+         
+         if($validator->fails())
+         {
+             $messages = $validator->messages();
+             $ret = ['status' => "error",'message'=>"Validation error"];
+             //dd($messages);
+         }
+         
+         else
+         {
+			 $req['role'] = "user";
+			 $req['type'] = "driver";
              $ret = $this->helpers->appSignup($req);
          }
 

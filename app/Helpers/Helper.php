@@ -575,46 +575,43 @@ $subject = $data['subject'];
             if($this->isValidUser($data))
             {
             	//Login successful               
-               $user = Auth::user();          
-			   $u = $this->getUser($user->id);
-			   $ud = $u['data'];
-			   /**
-			   	$temp['fname'] = $u->fname; 
-                       $temp['lname'] = $u->lname; 
-                       $temp['phone'] = $u->phone; 
-                       $temp['phone_status'] = $u->phone_status; 
-                       $temp['email'] = $u->email; 
-                       $temp['email_status'] = $u->email_status; 
-                       $temp['role'] = $u->role; 
-                       $temp['status'] = $u->status; 
-                       $temp['type'] = $u->type; 
-                       $temp['id'] = $u->id; 
-                       $temp['tk'] = $u->tk; 
-                       $temp['date'] = $u->created_at->format("jS F, Y h:i"); 
-			   **/
-			   $dt = [
-			     'fname' => $u['fname'],
-			     'lname' => $u['lname'],
-			     'phone' => $u['phone'],
-			     'email' => $u['email'],
-			     'status' => $u['status'],
-			     'type' => $u['type'],
-			     'tk' => $u['tk'],
-			     'id' => $u['id'],
-			     'img' => $ud['img'],
-			     'gender' => $ud['gender']
-			   ];
-			   
+               $user = Auth::user();     
+               
+               if($user->type == $data['type'])
+			   {
+				   $u = $this->getUser($user->id);
+			      $ud = $u['data'];
+
+			      $dt = [
+			        'fname' => $u['fname'],
+			        'lname' => $u['lname'],
+			        'phone' => $u['phone'],
+			        'email' => $u['email'],
+			        'status' => $u['status'],
+			        'type' => $u['type'],
+			        'tk' => $u['tk'],
+			        'id' => $u['id'],
+			        'img' => $ud['img'],
+			        'gender' => $ud['gender']
+			      ];
+				  
+				  $ret = [
+			        'status' => "ok",
+				    'user' => $dt
+				  ];
+			   }
+               
+                else
+				{			   
+			       $ret = ['status' => "error",'message' => "Invalid user type"];
+			    }
 			   /**
 			   $products = $this->getProducts($user);
 			   $customers = $this->getCustomers($user);
 			   $sales = $this->getSales($user);
 			   **/
 			   
-			   $ret = [
-			     'status' => "ok",
-				 'user' => $dt
-				];
+			   
             }
 			
 			else
