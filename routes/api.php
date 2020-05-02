@@ -23,6 +23,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/', 'MobileAppController@getIndex');
 Route::get('login', 'MobileAppController@getLogin');
 Route::get('signup', 'MobileAppController@getSignup');
+Route::get('driver-login', 'MobileAppController@getDriverLogin');
+Route::get('driver-signup', 'MobileAppController@getDriverSignup');
 Route::get('logout', 'MobileAppController@getLogout');
 Route::post('sync', 'MobileAppController@postAppSync');
 Route::get('check-number', 'MobileAppController@getCheckNumber');
