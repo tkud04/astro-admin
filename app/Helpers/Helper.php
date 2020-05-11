@@ -238,22 +238,13 @@ $subject = $data['subject'];
                                                       'lname' => $data['lname'], 
                                                       'role' => $data['role'], 
                                                       'status' => "enabled", 
-                                                      'type' => $data['type'], 
+                                                      'type' => "user", 
                                                       'password' => bcrypt($data['pass']), 
 													  
                                                       ]);
 			$data['user_id'] = $ret->id;
-			
-			switch($data['type'])
-			{
-				case "driver":
-				  $ud = $this->createDriverData($data);
-				break;
-				
-				case "user":
-				  $ud = $this->createUserData($data);
-				break;
-			}
+			$ud = $this->createUserData($data);
+
                                                       
                 return $ret;
            }
@@ -355,17 +346,7 @@ $subject = $data['subject'];
                        $temp['id'] = $u->id; 
                        $temp['tk'] = $u->tk; 
                        $temp['date'] = $u->created_at->format("jS F, Y h:i"); 
-					   
-					   switch($temp['type'])
-					   {
-						   case "driver":
-						    $temp['data'] = $this->getDriverData($temp['id']);
-						   break;
-						   
-						   case "user":
-						    $temp['data'] = $this->getUserData($temp['id']);
-						   break;
-					   }
+					   $temp['data'] = $this->getUserData($temp['id']);
 					   
                        $ret = $temp; 
                }                          
@@ -452,16 +433,7 @@ $subject = $data['subject'];
                                               'tk' => $data['tk'] 
                                                       ]);
 
-                  switch($uu->type)
-				  {
-					  case "driver":
-					    $this->updateDriverData($data);
-					  break;
-					  
-					  case "user":
-					    $this->updateUserData($data);
-					  break;
-				  }													  
+                  $this->updateUserData($data);													  
 				}
 					
            }
@@ -577,7 +549,7 @@ $subject = $data['subject'];
             	//Login successful               
                $user = Auth::user();     
                
-               if($user->type == $data['type'])
+               if($user->status == "enabled")
 			   {
 				   $u = $this->getUser($user->id);
 			      $ud = $u['data'];
@@ -603,7 +575,7 @@ $subject = $data['subject'];
                
                 else
 				{			   
-			       $ret = ['status' => "error",'message' => "Invalid user type"];
+			       $ret = ['status' => "error",'message' => "user suspended"];
 			    }
 			   /**
 			   $products = $this->getProducts($user);

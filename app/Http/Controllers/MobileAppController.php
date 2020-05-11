@@ -135,7 +135,7 @@ class MobileAppController extends Controller {
          
          else
          {
-			 $req['type'] = "driver";
+			 $req['type'] = "user";
              $ret = $this->helpers->appLogin($req);
          }
 
@@ -185,7 +185,7 @@ class MobileAppController extends Controller {
          else
          {
 			 $req['role'] = "user";
-			 $req['type'] = "driver";
+			 $req['type'] = "user";
              $ret = $this->helpers->appSignup($req);
          }
 
