@@ -25,6 +25,7 @@ class MobileAppController extends Controller {
 	 */
 	public function getIndex()
     {
+		//dd(bcrypt("aneto123"));
        	return json_encode(['status' => "ok",'version'=>"1.0"]);
     }
 	

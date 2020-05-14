@@ -475,7 +475,8 @@ $subject = $data['subject'];
 		   {
 			 $sx = (Auth::attempt(['email' => $data['id'],'password' => $data['password'],'status'=> "enabled"]) || Auth::attempt(['phone' => $data['id'],'password' => $data['password'],'status'=> "enabled"]));
 			 $data['sx'] = $sx;
-			 dd($data);
+			 //dd($data);
+			 return $sx;
 		   }
 		   
 		    function getSettings()
